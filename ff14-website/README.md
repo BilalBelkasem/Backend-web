@@ -188,21 +188,5 @@ MAIL_PASSWORD=your-password
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-## 🙏 Acknowledgments
-
-- **Laravel Team** - For the amazing framework
-- **Tailwind CSS** - For the utility-first CSS approach
-- **Alpine.js** - For lightweight JavaScript functionality
-- **FF14 Community** - For inspiration and feedback
-
-## 📞 Support
-
-If you have any questions or need help:
-- Create an issue on GitHub
-- Check the Laravel documentation
-- Review the code comments for guidance
-
----
-
 **Made with ❤️ for the FF14 Community**
     
