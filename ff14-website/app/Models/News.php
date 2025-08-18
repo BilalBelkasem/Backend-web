@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class News extends Model
 {
@@ -19,5 +20,11 @@ class News extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    // many-to-many tags voor nieuws
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'news_tag')->withTimestamps();
     }
 }

@@ -14,14 +14,16 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // Maak een admin gebruiker aan
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@ff14-website.com',
-            'password' => Hash::make('admin123'),
-            'is_admin' => true,
-            'username' => 'admin',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@ehb.be'],
+            [
+                'name' => 'Admin',
+                'username' => 'admin',
+                'password' => Hash::make('Password!321'),
+                'is_admin' => true,
+            ]
+        );
 
-        $this->command->info('Admin gebruiker aangemaakt: admin@ff14-website.com / admin123');
+        $this->command->info('Admin gebruiker aangemaakt of bijgewerkt: admin@ehb.be / Password!321');
     }
 }
