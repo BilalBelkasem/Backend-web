@@ -126,6 +126,71 @@
                             Terug
                         </a>
                     </div>
+
+                    <!-- Wall Posts & Private Message -->
+                    <div class="mt-10 grid md:grid-cols-2 gap-8">
+                        <div class="ff14-card p-6">
+                            <h3 class="ff14-text font-semibold mb-3">Muurberichten</h3>
+                            @auth
+                                @if(Auth::id() !== $user->id)
+                                    <form action="{{ route('profile.post', $user->username) }}" method="POST" class="mb-4">
+                                        @csrf
+                                        <textarea name="content" rows="3" class="w-full ff14-card ff14-text rounded p-3" placeholder="Laat een bericht achter..." required>{{ old('content') }}</textarea>
+                                        @error('content')
+                                            <p class="text-red-500 text-sm">{{ $message }}</p>
+                                        @enderror
+                                        <button class="ff14-button mt-2">Plaatsen</button>
+                                    </form>
+                                @endif
+                            @endauth
+
+                            <div class="space-y-3">
+                                @forelse($user->profilePosts as $post)
+                                    <div class="ff14-card p-4 rounded flex justify-between">
+                                        <div>
+                                            <div class="ff14-text text-sm font-semibold">
+                                                {{ $post->author->username ?? $post->author->name }}
+                                                <span class="ff14-accent text-xs font-normal ml-2">{{ $post->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            <div class="ff14-text mt-1">{!! nl2br(e($post->content)) !!}</div>
+                                        </div>
+                                        @auth
+                                            @if(Auth::id() === $post->author_user_id || Auth::id() === $post->profile_user_id || Auth::user()->isAdmin())
+                                                <form action="{{ route('profile.post.destroy', $post) }}" method="POST" onsubmit="return confirm('Verwijderen?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="text-red-500 hover:text-red-600 text-sm">Verwijderen</button>
+                                                </form>
+                                            @endif
+                                        @endauth
+                                    </div>
+                                @empty
+                                    <p class="ff14-text text-sm opacity-75">Nog geen berichten.</p>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <div class="ff14-card p-6">
+                            <h3 class="ff14-text font-semibold mb-3">Privébericht sturen</h3>
+                            @auth
+                                @if(Auth::id() !== $user->id)
+                                    <form action="{{ route('messages.store', $user->username) }}" method="POST">
+                                        @csrf
+                                        <textarea name="content" rows="3" class="w-full ff14-card ff14-text rounded p-3" placeholder="Schrijf een privébericht..." required>{{ old('content') }}</textarea>
+                                        @error('content')
+                                            <p class="text-red-500 text-sm">{{ $message }}</p>
+                                        @enderror
+                                        <button class="ff14-button mt-2">Versturen</button>
+                                    </form>
+                                    <a href="{{ route('messages.inbox') }}" class="ff14-text underline text-sm mt-3 inline-block">Ga naar je inbox</a>
+                                @else
+                                    <p class="ff14-text text-sm opacity-75">Je kunt jezelf geen bericht sturen.</p>
+                                @endif
+                            @else
+                                <p class="ff14-text text-sm opacity-75">Log in om een bericht te sturen.</p>
+                            @endauth
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

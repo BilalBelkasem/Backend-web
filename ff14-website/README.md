@@ -28,6 +28,7 @@ This is a Laravel-based community website for Final Fantasy XIV players. The pro
 - **Image Upload Support** - Store images on server
 - **Publication Control** - Draft/publish functionality
 - **Public Access** - All visitors can view news
+- **Comments** - Authenticated users can comment on news; owners/admins can remove
 
 ### ❓ FAQ System
 - **Categorized Q&A** - Organized by topics
@@ -38,6 +39,11 @@ This is a Laravel-based community website for Final Fantasy XIV players. The pro
 - **Contact Form** - Public contact form
 - **Admin Notifications** - Email alerts for new messages
 - **Message Storage** - Database storage of contact messages
+- **Admin Panel & Replies** - Admins can view messages and send email replies
+
+### 💬 Social Features
+- **Profile Wall Posts** - Users can post on someone else’s public profile
+- **Private Messages (DMs)** - Users can send private messages with an inbox
 
 ## 🛠️ Setup Instructions
 
@@ -79,6 +85,11 @@ DB_PASSWORD=your_password
 php artisan migrate:fresh --seed
 ```
 
+If you are upgrading an existing database, run:
+```bash
+php artisan migrate
+```
+
 ### 7. Link Storage
 ```bash
 php artisan storage:link
@@ -101,6 +112,8 @@ After running the seeder, you'll have access to an admin account:
 
 **⚠️ Important:** Change the default password after first login!
 
+To receive contact form reply emails, ensure your mail credentials are set in `.env` (see Environment Variables below). Admin notification emails default to `admin@ff14-website.com`.
+
 ## 🏗️ Project Structure
 
 ```
@@ -108,29 +121,47 @@ ff14-website/
 ├── app/
 │   ├── Http/Controllers/
 │   │   ├── Admin/UserController.php    # Admin user management
+│   │   ├── Admin/ContactMessageController.php # Admin contact inbox & replies
 │   │   ├── NewsController.php          # News CRUD operations
 │   │   ├── FaqController.php          # FAQ management
 │   │   ├── ContactController.php      # Contact form handling
-│   │   └── ProfileController.php      # User profile management
+│   │   ├── ProfileController.php      # User profile management
+│   │   ├── CommentController.php      # News comments
+│   │   ├── ProfilePostController.php  # Profile wall posts
+│   │   └── PrivateMessageController.php # Private messages
 │   ├── Models/
 │   │   ├── User.php                   # User model with admin support
 │   │   ├── News.php                   # News articles
 │   │   ├── FaqCategory.php           # FAQ categories
 │   │   ├── FaqItem.php               # FAQ questions/answers
-│   │   └── ContactMessage.php        # Contact form messages
+│   │   ├── ContactMessage.php        # Contact form messages
+│   │   ├── Comment.php               # News comments
+│   │   ├── ProfilePost.php           # Profile wall posts
+│   │   └── PrivateMessage.php        # Private messages
 │   ├── Http/Middleware/
 │   │   └── AdminMiddleware.php        # Admin access control
 │   └── Mail/
-│       └── ContactFormMail.php       # Contact form emails
+│       ├── ContactFormMail.php       # Contact form emails
+│       └── ContactFormReplyMail.php  # Admin reply emails
 ├── resources/views/
 │   ├── admin/users/                   # Admin user management views
+│   ├── admin/contact/                 # Admin contact inbox views
 │   ├── news/                          # News views
 │   ├── faq/                           # FAQ views
 │   ├── contact/                       # Contact form views
-│   └── profile/                       # Profile views
+│   ├── profile/                       # Profile views
+│   ├── messages/                      # Inbox view
+│   └── emails/                        # Mail templates
 └── routes/
     └── web.php                        # All application routes
 ```
+
+## 🧭 Feature Usage Guide
+
+- **News Comments**: Open a news item (`/news/{id}`) while logged in to post or delete your own comments. Admins can delete any comment.
+- **Admin Contact Inbox**: Go to `Admin → 📬 Contactberichten` or `/admin/contact` to list, view, and reply to contact messages. Replies are emailed to the sender and stored with the message.
+- **Profile Wall Posts**: Visit a user’s public profile (`/profile/{username}`) and post on their wall. Post owners, profile owners, and admins can remove posts.
+- **Private Messages**: Send a DM from a user’s public profile; view received messages in your Inbox (`/messages`). Mark messages as read from the inbox.
 
 ## 🎨 Technologies Used
 

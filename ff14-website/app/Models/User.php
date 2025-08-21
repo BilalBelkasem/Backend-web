@@ -60,6 +60,30 @@ class User extends Authenticatable
         return $this->hasMany(News::class);
     }
 
+    // comments made by this user
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    // wall posts on this user's profile
+    public function profilePosts(): HasMany
+    {
+        return $this->hasMany(ProfilePost::class, 'profile_user_id')->latest();
+    }
+
+    // messages received
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(PrivateMessage::class, 'receiver_id')->latest();
+    }
+
+    // messages sent
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(PrivateMessage::class, 'sender_id')->latest();
+    }
+
     // check of gebruiker admin is
     public function isAdmin(): bool
     {

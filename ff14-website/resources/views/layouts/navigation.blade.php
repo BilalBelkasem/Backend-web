@@ -25,6 +25,9 @@
                         <a href="{{ route('dashboard') }}" class="ff14-text hover:ff14-accent px-3 py-2 rounded-md text-sm font-medium">
                             🏠 Dashboard
                         </a>
+                        <a href="{{ route('messages.inbox') }}" class="ff14-text hover:ff14-accent px-3 py-2 rounded-md text-sm font-medium">
+                            ✉️ Inbox
+                        </a>
                     @endauth
                 </div>
             </div>
@@ -53,6 +56,9 @@
                             @if(Auth::user()->isAdmin())
                                 <x-dropdown-link :href="route('admin.users.index')">
                                     👥 Gebruikers Beheren
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('admin.contact.index')">
+                                    📬 Contactberichten
                                 </x-dropdown-link>
                             @endif
 

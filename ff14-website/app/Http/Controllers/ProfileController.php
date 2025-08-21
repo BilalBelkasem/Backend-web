@@ -70,7 +70,9 @@ class ProfileController extends Controller
     // toon publiek profiel
     public function show($username)
     {
-        $user = \App\Models\User::where('username', $username)->firstOrFail();
+        $user = \App\Models\User::where('username', $username)
+            ->with(['profilePosts.author'])
+            ->firstOrFail();
         return view('profile.public', compact('user'));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class News extends Model
 {
@@ -26,5 +27,11 @@ class News extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'news_tag')->withTimestamps();
+    }
+
+    // comments on this news item
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->latest();
     }
 }

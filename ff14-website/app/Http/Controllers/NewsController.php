@@ -50,7 +50,7 @@ class NewsController extends Controller
     // toon specifiek nieuws
     public function show(string $id)
     {
-        $news = News::with('user')->findOrFail($id);
+        $news = News::with(['user', 'comments.user'])->findOrFail($id);
         return view('news.show', compact('news'));
     }
 

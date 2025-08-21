@@ -63,6 +63,50 @@
                             Terug naar Nieuws
                         </a>
                     </div>
+
+                    <!-- Comments -->
+                    <div class="mt-10 pt-8 border-t border-gray-200 border-opacity-20">
+                        <h3 class="ff14-text text-lg font-semibold mb-4">Reacties</h3>
+
+                        @auth
+                            <form action="{{ route('comments.store', $news->id) }}" method="POST" class="mb-6">
+                                @csrf
+                                <label for="content" class="block ff14-text text-sm mb-2">Jouw reactie</label>
+                                <textarea id="content" name="content" rows="3" class="w-full ff14-card ff14-text rounded p-3" placeholder="Schrijf een reactie..." required>{{ old('content') }}</textarea>
+                                @error('content')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                                <button type="submit" class="ff14-button mt-3">Plaatsen</button>
+                            </form>
+                        @else
+                            <p class="ff14-text text-sm mb-6">Log in om een reactie te plaatsen.</p>
+                        @endauth
+
+                        <div class="space-y-4">
+                            @forelse($news->comments as $comment)
+                                <div class="ff14-card p-4 rounded flex items-start justify-between">
+                                    <div>
+                                        <div class="ff14-text text-sm font-semibold">
+                                            {{ $comment->user->username ?? $comment->user->name ?? 'Gebruiker' }}
+                                            <span class="ff14-accent text-xs font-normal ml-2">{{ $comment->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        <div class="ff14-text mt-1">{!! nl2br(e($comment->content)) !!}</div>
+                                    </div>
+                                    @auth
+                                        @if(Auth::id() === $comment->user_id || Auth::user()->isAdmin())
+                                            <form action="{{ route('comments.destroy', $comment) }}" method="POST" onsubmit="return confirm('Reactie verwijderen?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="text-red-500 hover:text-red-600 text-sm">Verwijderen</button>
+                                            </form>
+                                        @endif
+                                    @endauth
+                                </div>
+                            @empty
+                                <p class="ff14-text text-sm opacity-75">Nog geen reacties. Wees de eerste!</p>
+                            @endforelse
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
